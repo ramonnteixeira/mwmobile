@@ -1,7 +1,10 @@
 package ramonnteixeira.mywarrantymobile.view.scenes
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +19,8 @@ class MainActivity(
     private val warrantyList: MutableList<Warranty> = mutableListOf()
 ) : AppCompatActivity() {
 
+    private val requestEditWarranty= 1
+
     private var controller: WarrantyController? = null
     private var refreshFunc: () -> List<Warranty> = { arrayListOf() }
 
@@ -25,7 +30,11 @@ class MainActivity(
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        controller = WarrantyController(baseContext)
+        controller = WarrantyController(applicationContext)
+        refreshFunc = { controller!!.findActives() }
+
+        createWarrantyButton.setOnClickListener { createWarranty() }
+
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         warranties.layoutManager = LinearLayoutManager(this)
         warranties.adapter = ItemWarrantyAdapter(warrantyList)
@@ -52,7 +61,7 @@ class MainActivity(
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_expired -> {
-                    refreshFunc = { controller!!.findExpireds() }
+                    refreshFunc = { controller!!.findExpired() }
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_all -> {
@@ -66,32 +75,16 @@ class MainActivity(
         false
     }
 
-//    private fun createTaskDialog() {
-//        val builder = AlertDialog.Builder(this)
-//        val view = layoutInflater.inflate(R.layout.dialog_task, null)
-//        builder
-//            .setView(view)
-//            .setPositiveButton(getString(R.string.button_add)) { dialog, _ ->
-//                val lastTask = createTask(view.taskNameEdit.text.toString())
-//                Snackbar
-//                    .make(view, "Task created with success", Snackbar.LENGTH_LONG)
-//                    .setAction("Undo") { remove(lastTask) }
-//                    .show()
-//                dialog.dismiss()
-//            }
-//            .setNegativeButton(getString(R.string.button_cancel)) { dialog, _ -> dialog.dismiss() }
-//
-//        builder.create().show()
-//    }
-//    private fun createTask(name: String): Task {
-//        val task = getController().create(name)
-//        refresh()
-//        return task
-//    }
-//
-//    private fun remove(task: Task) {
-//        getController().remove(task)
-//        refresh()
-//    }
+    private fun createWarranty() {
+        val intent = Intent(this, WarrantyEditActivity::class.java)
+        startActivityForResult(intent, requestEditWarranty)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == requestEditWarranty) {
+            Toast.makeText(this, R.string.msg_warranty_created, Toast.LENGTH_LONG)
+            refresh()
+        }
+    }
 
 }

@@ -4,6 +4,6 @@ import ramonnteixeira.mywarrantymobile.model.entity.Warranty
 
 interface WarrantyRepository {
 
-    fun findAll(): List<Warranty>
-
+    fun findByState(expired: Boolean?): List<Warranty>
+    fun create(warranty: Warranty)
 }

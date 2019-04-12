@@ -9,24 +9,29 @@ class Database(var context: Context, private val const: DatabaseConstants = Data
     : SQLiteOpenHelper(context, const.dbName, null, const.dbVersion) {
 
     override fun onCreate(db: SQLiteDatabase?) {
-        db!!.execSQL(loadScript("create"))
+        onUpgrade(db, 1, const.dbVersion)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         val numberPattern = "%03d"
         for (i in oldVersion..newVersion) {
-            db!!.execSQL(
-                loadScript(
-                    "V__${numberPattern.format(i)}.sql"
-                )
+            val script = loadStatements(
+                "V__${numberPattern.format(i)}"
             )
+
+            script.filter{ s -> !s.isBlank() }.forEach {
+                    stmt -> db!!.execSQL(stmt)
+            }
         }
     }
 
-    private fun loadScript(filename: String): String {
-        context.assets.list("").iterator().forEach { s -> println(s) }
-        context.assets.list("migrations").iterator().forEach { s -> println(s) }
+    private fun loadStatements(filename: String): List<String> {
+        return  loadScript(filename)
+                    .replace("(\\/\\*([\\s\\S]*?)\\*\\/)|(--(.)*)|(\\n)|(\\r)", "")
+                    .split(";")
+    }
 
+    private fun loadScript(filename: String): String {
         val file = context.assets.open("migrations/$filename.sql")
         return  file.reader(Charset.defaultCharset()).readText()
     }

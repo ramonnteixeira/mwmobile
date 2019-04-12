@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Minhas Garantias mobile</string>
+    <string name="description_logo">Logotipo da aplicação</string>
+    <string name="msg_warranty_not_found">Nenhuma garantia encontrada.</string>
+    <string name="title_active">Ativas</string>
+    <string name="title_expired">Expiradas</string>
+    <string name="title_all">Todas</string>
+    <string name="title_activity_main">Minhas Garantias</string>
+    <string name="title_activity_warranty_edit">Garantia</string>
+    <string name="product_name">Nome do produto</string>
+    <string name="product_photo">Foto do produto</string>
+    <string name="acquisition_date">Data de compra</string>
+    <string name="expire_date">Data do fim da garantia</string>
+    <string name="invoice_photo">Foto da NF/cupom</string>
+    <string name="msg_warranty_created">Garantia criada com sucesso</string>
+</resources>

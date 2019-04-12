@@ -4,6 +4,7 @@ import android.content.Context
 import ramonnteixeira.mywarrantymobile.model.entity.Warranty
 import ramonnteixeira.mywarrantymobile.model.repositories.WarrantyRepository
 import ramonnteixeira.mywarrantymobile.model.repositories.jdbc.WarrantyJdbcRepository
+import java.util.*
 
 class WarrantyController(
     context: Context?,
@@ -11,15 +12,19 @@ class WarrantyController(
     ){
 
     fun findAll(): List<Warranty> {
-        return repository.findAll()
+        return repository.findByState(null)
     }
 
     fun findActives(): List<Warranty> {
-        return repository.findAll()
+        return repository.findByState(false)
     }
 
-    fun findExpireds(): List<Warranty> {
-        return repository.findAll()
+    fun findExpired(): List<Warranty> {
+        return repository.findByState(true)
     }
 
+    fun create(warranty: Warranty) {
+        warranty._id = UUID.randomUUID().toString()
+        repository.create(warranty)
+    }
 }

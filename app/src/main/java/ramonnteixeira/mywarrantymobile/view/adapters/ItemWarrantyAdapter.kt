@@ -24,9 +24,12 @@ class ItemWarrantyAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val warranty = warranties[position]
-        if (warranty.expirationDate.isBefore(LocalDate.now())) {
+        if (warranty.expireDate.isBefore(LocalDate.now())) {
             holder.itemView.productName.setTextColor(Color.GRAY)
             holder.itemView.productName.paintFlags = holder.itemView.productName.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+        } else {
+            holder.itemView.productName.setTextColor(Color.BLACK)
+            holder.itemView.productName.paintFlags = holder.itemView.productName.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         }
         holder.bind(warranty)
     }
