@@ -82,7 +82,7 @@ class MainActivity(
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK && requestCode == requestEditWarranty) {
-            Toast.makeText(this, R.string.msg_warranty_created, Toast.LENGTH_LONG)
+            Toast.makeText(this, R.string.msg_warranty_created, Toast.LENGTH_LONG).show()
             refresh()
         }
     }

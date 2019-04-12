@@ -13,4 +13,5 @@
     <string name="expire_date">Expire date</string>
     <string name="invoice_photo">Invoice photo</string>
     <string name="msg_warranty_created">Warranty created with success</string>
+    <string name="warranty_days_format">%s days remaining</string>
 </resources>

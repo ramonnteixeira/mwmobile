@@ -1,5 +1,6 @@
 package ramonnteixeira.mywarrantymobile.view.adapters
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.LayoutInflater
@@ -8,9 +9,13 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_warranty.view.*
-import ramonnteixeira.mywarrantymobile.R
 import ramonnteixeira.mywarrantymobile.model.entity.Warranty
+import java.time.Duration
 import java.time.LocalDate
+import android.graphics.BitmapFactory
+import android.util.Base64
+import ramonnteixeira.mywarrantymobile.R
+
 
 class ItemWarrantyAdapter(
     private var warranties: MutableList<Warranty>
@@ -19,7 +24,7 @@ class ItemWarrantyAdapter(
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_warranty, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, parent.context)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -38,9 +43,17 @@ class ItemWarrantyAdapter(
         return warranties.size
     }
 
-    class ViewHolder(@NonNull itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ViewHolder(@NonNull itemView: View, val context: Context) : RecyclerView.ViewHolder(itemView) {
         fun bind(warranty: Warranty) {
             itemView.productName.text = warranty.productName
+            val warrantyDays = Duration.between(LocalDate.now().atStartOfDay(), warranty.expireDate.atStartOfDay()).toDays().toString()
+            itemView.warrantyDays.text = context.getString(R.string.warranty_days_format).format(warrantyDays)
+
+            if (warranty.productPhoto.length > 1) {
+                val decodedString = Base64.decode(warranty.productPhoto, Base64.DEFAULT)
+                val productBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+                itemView.productPhoto.setImageBitmap(productBitmap)
+            }
         }
     }
 
